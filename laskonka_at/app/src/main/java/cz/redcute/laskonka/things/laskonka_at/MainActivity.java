@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 Log.w(TAG, "Error using GPIO", e);
             }
-            Log.d(TAG, "Changed state of LED to: " + state);
+            //Log.d(TAG, "Changed state of LED to: " + state);
             timerHandler.postDelayed(this, 500);
         }
     };
@@ -64,7 +64,6 @@ public class MainActivity extends Activity {
 
         try {
             ledGpio = pioManager.openGpio("BCM2");
-
             ledGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
 
             timerHandler.postDelayed(timerRunnable, 500);
@@ -72,31 +71,18 @@ public class MainActivity extends Activity {
             Log.w(TAG, "Error opening GPIO", e);
         }
 
+        listeningTlacitko(pioManager);
+
     }
 
 
     protected void listeningTlacitko(PeripheralManager pioManager) {
-        try {
-            tlacitkoGpio = pioManager.openGpio("BCM3");
-            tlacitkoGpio.setDirection(Gpio.DIRECTION_IN);
-
-            tlacitkoGpio.setEdgeTriggerType(Gpio.EDGE_BOTH);
-            tlacitkoGpio.registerGpioCallback(mGpioCallback);
-
-        } catch (IOException e) {
-            Log.w(TAG, "Error opening GPIO", e);
-        }
-
-        private GpioCallback mGpioCallback = new GpioCallback() {
+        GpioCallback mGpioCallback = new GpioCallback() {
             @Override
             public boolean onGpioEdge(Gpio gpio) {
                 // Read the active low pin state
                 try {
-                    if (tlacitkoGpio.getValue()) {
-
-                    } else {
-                        // Pin is LOW
-                    }
+                    Log.d(TAG, "Changed state of Tlacitko to: " + tlacitkoGpio.getValue());
                 } catch (IOException e) {
                     Log.w(TAG, tlacitkoGpio + "Err with tlacitko value");
                 }
@@ -110,6 +96,20 @@ public class MainActivity extends Activity {
                 Log.w(TAG, tlacitkoGpio + ": Error event " + error);
             }
         };
+
+        try {
+            tlacitkoGpio = pioManager.openGpio("BCM3");
+            tlacitkoGpio.setDirection(Gpio.DIRECTION_IN);
+
+            tlacitkoGpio.setEdgeTriggerType(Gpio.EDGE_BOTH);
+            tlacitkoGpio.registerGpioCallback(mGpioCallback);
+            Log.d(TAG, "Tlacitko setup");
+
+        } catch (IOException e) {
+            Log.w(TAG, "Error opening GPIO", e);
+        }
+
+
 
 
     }
