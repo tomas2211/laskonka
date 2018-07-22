@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
     private Gpio tlacitkoGpio;
     private DatabaseReference mDatabase;
 
+    private SensorActivity sensorActivity;
+
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
         boolean state = false;
@@ -54,6 +56,8 @@ public class MainActivity extends Activity {
             //Log.d(TAG, "Changed state of LED to: " + state);
             timerHandler.postDelayed(this, 500);
 
+            sensorActivity.readTempPress();
+
         }
     };
 
@@ -66,7 +70,7 @@ public class MainActivity extends Activity {
         Log.d(TAG, "Available GPIO: " + pioManager.getGpioList());
 
         try {
-            ledGpio = pioManager.openGpio("BCM2");
+            ledGpio = pioManager.openGpio("BCM17");
             ledGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
 
             timerHandler.postDelayed(timerRunnable, 500);
@@ -76,6 +80,8 @@ public class MainActivity extends Activity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference("message");
         listeningTlacitko(pioManager);
+
+        sensorActivity = new SensorActivity();
 
     }
 
@@ -106,7 +112,7 @@ public class MainActivity extends Activity {
         };
 
         try {
-            tlacitkoGpio = pioManager.openGpio("BCM3");
+            tlacitkoGpio = pioManager.openGpio("BCM4");
             tlacitkoGpio.setDirection(Gpio.DIRECTION_IN);
 
             tlacitkoGpio.setEdgeTriggerType(Gpio.EDGE_BOTH);
