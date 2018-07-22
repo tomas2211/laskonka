@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
             Log.w(TAG, "Error opening GPIO", e);
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("message");
         listeningTlacitko(pioManager);
 
     }
@@ -87,7 +87,10 @@ public class MainActivity extends Activity {
                 // Read the active low pin state
                 try {
                     Log.d(TAG, "Changed state of Tlacitko to: " + tlacitkoGpio.getValue());
-                    mDatabase.child("dunno").setValue("tlacitko zmacknute");
+                    if(!tlacitkoGpio.getValue())
+                        mDatabase.setValue("Tlacitko zmacknute :-) <3");
+                    else
+                        mDatabase.setValue("Zmackni tlacitko...prosim!!!!");
                 } catch (IOException e) {
                     Log.w(TAG, tlacitkoGpio + "Err with tlacitko value");
                 }
