@@ -10,3 +10,4 @@ This is RedCute Laskonka project.
 
  * Markdown cheatsheet: [https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
  * DART basics intro: [https://www.dartlang.org/guides/language/language-tour](https://www.dartlang.org/guides/language/language-tour)
+ * Flutter tour: [https://flutter.io/widgets-intro/](https://flutter.io/widgets-intro/)
