@@ -8,6 +8,8 @@ import android.util.Log;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.GpioCallback;
 import com.google.android.things.pio.PeripheralManager;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
@@ -35,7 +37,7 @@ public class MainActivity extends Activity {
 
     private Gpio ledGpio;
     private Gpio tlacitkoGpio;
-
+    private DatabaseReference mDatabase;
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -51,6 +53,7 @@ public class MainActivity extends Activity {
             }
             //Log.d(TAG, "Changed state of LED to: " + state);
             timerHandler.postDelayed(this, 500);
+
         }
     };
 
@@ -71,6 +74,7 @@ public class MainActivity extends Activity {
             Log.w(TAG, "Error opening GPIO", e);
         }
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         listeningTlacitko(pioManager);
 
     }
@@ -83,6 +87,7 @@ public class MainActivity extends Activity {
                 // Read the active low pin state
                 try {
                     Log.d(TAG, "Changed state of Tlacitko to: " + tlacitkoGpio.getValue());
+                    mDatabase.child("dunno").setValue("tlacitko zmacknute");
                 } catch (IOException e) {
                     Log.w(TAG, tlacitkoGpio + "Err with tlacitko value");
                 }

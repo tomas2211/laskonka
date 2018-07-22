@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "594599985968",
+    "firebase_url": "https://laskonkaat.firebaseio.com",
+    "project_id": "laskonkaat",
+    "storage_bucket": "laskonkaat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594599985968:android:4e8d434e0465d6fe",
+        "android_client_info": {
+          "package_name": "cz.redcute.laskonka.things.laskonka_at"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594599985968-917uma1og4ciuar3pk3p2dkvkmoemu09.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cz.redcute.laskonka.things.laskonka_at",
+            "certificate_hash": "c421acb4a276c5b93757beb690e3fb912a88d5f4"
+          }
+        },
+        {
+          "client_id": "594599985968-coupvmn8oo79hhtdogpr3jdpirb00uiu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5-Wam_byC9MfgLqvnKkhySPGsIQ4x8zA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594599985968-coupvmn8oo79hhtdogpr3jdpirb00uiu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
