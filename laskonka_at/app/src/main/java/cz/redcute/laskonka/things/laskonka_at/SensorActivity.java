@@ -21,8 +21,8 @@ public class SensorActivity {
         float[] arr = {0,0};
         try {
             temp = mBmp180.readTemperature();
-            press = mBmp180.readPressure();
-            double alt = mBmp180.readAltitude();
+            //press = mBmp180.readPressure();
+            double alt = 0;//mBmp180.readAltitude();
             Log.d(TAG, "loop: temp " + temp + " alt: " + alt + " press: " + press);
         } catch (IOException e) {
             Log.e(TAG, "Sensor loop  error : ", e);

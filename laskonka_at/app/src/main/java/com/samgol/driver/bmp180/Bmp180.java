@@ -76,7 +76,7 @@ public class Bmp180 implements AutoCloseable {
 
     private I2cDevice mDevice;
 
-    private int mode = BMP180_STANDARD;
+    private int mode = BMP180_ULTRA_HIGH_RES;
 
     private LastRead lastRawTemp = new LastRead();
     private LastRead lastRawPressure = new LastRead();
@@ -150,7 +150,7 @@ public class Bmp180 implements AutoCloseable {
 
         mDevice.writeRegByte(BMP180_CONTROL, (byte) BMP180_READ_TEMPERATURE_CMD);
         waitFor(5);
-        int raw = readU16(BMP180_TEMPERATURE_DATA);
+        int raw = (readU16(BMP180_TEMPERATURE_DATA) & 0xffff);
 
         lastRawTemp.setVal(raw);
         return raw;
@@ -169,9 +169,9 @@ public class Bmp180 implements AutoCloseable {
 
         mDevice.writeRegByte(BMP180_CONTROL, (byte) (BMP180_READ_PRESSURE_CMD + (mode << 6)));
         waitFor(modeDelay[mode]);
-        int msb = mDevice.readRegByte(BMP180_PRESSURE_DATA);
-        int lsb = mDevice.readRegByte(BMP180_PRESSURE_DATA + 1);
-        int xlsb = mDevice.readRegByte(BMP180_PRESSURE_DATA + 2);
+        int msb = (mDevice.readRegByte(BMP180_PRESSURE_DATA) & 0xff);
+        int lsb = (mDevice.readRegByte(BMP180_PRESSURE_DATA + 1) & 0xff);
+        int xlsb = (mDevice.readRegByte(BMP180_PRESSURE_DATA + 2) & 0xff);
         int raw = ((msb << 16) + (lsb << 8) + xlsb) >> (8 - mode);
 
         lastRawPressure.setVal(raw);
@@ -188,11 +188,25 @@ public class Bmp180 implements AutoCloseable {
         if (lastTemperature.isValid())
             return lastTemperature.val / 10.0F;
 
+
+
+
         int UT = readRawTemp();
         int X1 = ((UT - AC6) * AC5) >> 15;
         int X2 = (MC << 11) / (X1 + MD);
         int B5 = X1 + X2;
         lastTemperature.setVal(((B5 + 8) >> 4));
+
+        // UT= 27460 AC6=18123 AC5=24906 MC=-12042 MD=2877 X1=7096 X2=-2472 B5=4624 temp: 289
+        Log.d(TAG,"UT= "+UT+
+                " AC6="+AC6+
+                " AC5="+AC5+
+                " MC="+MC+
+                " MD="+MD+
+                " X1="+X1+
+                " X2="+X2+
+                " B5="+B5+
+                " temp: "+lastTemperature.val);
 
         return lastTemperature.val / 10.0F;
     }
@@ -227,8 +241,8 @@ public class Bmp180 implements AutoCloseable {
         X1 = (AC3 * B6) >> 13;
         X2 = (B1 * ((B6 * B6) >> 12)) >> 16;
         X3 = ((X1 + X2) + 2) >> 2;
-        long B4 = (AC4 * (X3 + 32768)) >> 15;
-        long B7 = (UP - B3) * (50000 >> mode);
+        int B4 = (((AC4 * (X3 + 32768)) >> 15) & 0xffffffff);
+        int B7 = ((UP - B3) * (50000 >> mode) & 0xffffffff);
 
         if (B7 < 0x80000000) {
             p = (B7 * 2) / B4;
